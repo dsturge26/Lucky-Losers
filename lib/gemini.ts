@@ -2,20 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 
 const MODEL = "gemini-2.5-flash-image";
 
-let cachedClient: GoogleGenAI | null = null;
-
-function getClient(): GoogleGenAI {
-  if (!cachedClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY is not set. Copy .env.local.example to .env.local and add your key.");
-    }
-    cachedClient = new GoogleGenAI({ apiKey });
-  }
-  return cachedClient;
-}
-
 export interface EditHairstyleInput {
+  apiKey: string;
   imageBase64: string;
   mimeType: string;
   prompt: string;
@@ -27,7 +15,10 @@ export interface EditHairstyleOutput {
 }
 
 export async function editHairstyle(input: EditHairstyleInput): Promise<EditHairstyleOutput> {
-  const ai = getClient();
+  if (!input.apiKey) {
+    throw new Error("Missing Gemini API key.");
+  }
+  const ai = new GoogleGenAI({ apiKey: input.apiKey });
 
   const response = await ai.models.generateContent({
     model: MODEL,
@@ -59,4 +50,15 @@ export async function editHairstyle(input: EditHairstyleInput): Promise<EditHair
       ? `Model returned no image. Message: ${text}`
       : "Model returned no image data.",
   );
+}
+
+export async function fileToBase64(file: File): Promise<{ base64: string; mimeType: string }> {
+  const buf = await file.arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return { base64: btoa(binary), mimeType: file.type };
 }
