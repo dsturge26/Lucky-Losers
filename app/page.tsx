@@ -31,7 +31,7 @@ export default function Page() {
         apiKey: apiKey!,
         imageBase64: input.base64,
         mimeType: input.mimeType,
-        prompt: buildPrompt(style),
+        prompt: buildPrompt(style, length!),
       });
       return { status: "ok", dataUrl: `data:${out.mimeType};base64,${out.imageBase64}` };
     } catch (err) {

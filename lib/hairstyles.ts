@@ -46,10 +46,17 @@ export function getHairstyles(length: Length): Hairstyle[] {
   return HAIRSTYLES[length];
 }
 
-export function buildPrompt(style: Hairstyle): string {
+const LENGTH_ANCHOR: Record<Length, string> = {
+  short: "The result must clearly show SHORT hair: roughly 0 to 4 cm (0 to 1.5 inches) long, never longer than the tops of the ears, never falling onto the forehead beyond a small fringe. Cut his current hair down if it is currently longer.",
+  medium: "The result must clearly show MEDIUM-LENGTH hair: roughly 8 to 15 cm (3 to 6 inches) long, reaching at least to the bottom of the ears and ideally to the jawline or collar. The hair must be visibly longer than the tops of the ears. If his current hair is shorter than this, you MUST GROW the hair to the medium length described — treat this as both growing and restyling the hair. Do not return a short cut.",
+  long: "The result must clearly show LONG hair: at least 20 cm (8 inches) long, reaching to the shoulders or longer. If his current hair is shorter, you MUST GROW the hair to long length — treat this as both growing and restyling the hair. Do not return a short or medium cut.",
+};
+
+export function buildPrompt(style: Hairstyle, length: Length): string {
   return [
     `Task: restyle the hair on this man's head to be ${style.description}.`,
-    `This is a hairstyle TRANSFORMATION. The resulting hair MUST look clearly and visibly different from his current hair — completely replace his existing hair, do not retain his current length, parting, texture, or shape. The new hairstyle should be obvious at a glance.`,
+    LENGTH_ANCHOR[length],
+    `This is a hairstyle TRANSFORMATION. The resulting hair MUST look clearly and visibly different from his current hair — completely replace his existing hair. Do not retain his current length, parting, texture, or shape. The new hairstyle should be obvious at a glance and unmistakably match the description above, including the length.`,
     `Keep the following identical to the original photo: his face and facial features, his eyes, his skin tone, his facial expression, his head shape, any beard or facial hair, his clothing, his body and pose, and the background. Match the original photo's lighting and camera angle on the new hair. Keep his natural hair color from the original photo.`,
     `Render the result as a fully photorealistic photograph. Do NOT return the original image unchanged.`,
   ].join(" ");
