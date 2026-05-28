@@ -47,9 +47,9 @@ export function getHairstyles(length: Length): Hairstyle[] {
 }
 
 const LENGTH_ANCHOR: Record<Length, string> = {
-  short: "The result must clearly show SHORT hair: roughly 0 to 4 cm (0 to 1.5 inches) long, never longer than the tops of the ears, never falling onto the forehead beyond a small fringe. Cut his current hair down if it is currently longer.",
-  medium: "The result must clearly show MEDIUM-LENGTH hair: roughly 8 to 15 cm (3 to 6 inches) long, reaching at least to the bottom of the ears and ideally to the jawline or collar. The hair must be visibly longer than the tops of the ears. If his current hair is shorter than this, you MUST GROW the hair to the medium length described — treat this as both growing and restyling the hair. Do not return a short cut.",
-  long: "The result must clearly show LONG hair: at least 20 cm (8 inches) long, reaching to the shoulders or longer. If his current hair is shorter, you MUST GROW the hair to long length — treat this as both growing and restyling the hair. Do not return a short or medium cut.",
+  short: "The result must clearly show SHORT hair: roughly 0 to 4 cm (0 to 1.5 inches) long. Hair stays above the tops of the ears and does not fall onto the forehead beyond a small fringe. If his current hair is longer than this, cut it down.",
+  medium: "The result must clearly show MEDIUM-LENGTH hair: roughly 6 to 11 cm (2.5 to 4.5 inches) long. Hair reaches AROUND ear level — it covers the tops of the ears but does NOT extend past the bottom of the jawline and does NOT touch the shoulders. This is longer than short hair but clearly NOT long hair. If his current hair is shorter, extend it just to ear level; if longer, trim it back. Do not return long hair.",
+  long: "The result must clearly show LONG hair: at least 20 cm (8 inches) long, clearly reaching to the shoulders or longer. If his current hair is shorter, you MUST grow the hair to long length — treat this as both growing and restyling. Do not return a short or medium cut.",
 };
 
 export function buildPrompt(style: Hairstyle, length: Length): string {
